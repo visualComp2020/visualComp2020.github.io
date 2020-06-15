@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <title>Visual Computing</title>
+
+  <!-- Bootstrap core CSS -->
+  <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Custom fonts for this template -->
+  <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+  <link href='https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+
+  <!-- Custom styles for this template -->
+  <link href="css/clean-blog.css" rel="stylesheet">
+
+</head>
+
+<body>
+
+  <!-- Navigation -->
+  <nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
+    <div class="container">
+      <a class="navbar-brand" href="index.html">Visual Computing</a>
+      <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+        Menu
+        <i class="fas fa-bars"></i>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarResponsive">
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="index.html">Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="projects.html">Projects</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="team.html">Team</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Page Header -->
+  <header class="masthead" style="background-image: url('img/image-proc-bg.jpg')">
+    <div class="overlay"></div>
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 col-md-10 mx-auto">
+          <div class="site-heading">
+            <h1>Image Processing</h1>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Post Content -->
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-12 col-md-12 mx-auto">
+        <h5 class="mb-3">
+          For this project, the following features will be implemented for images/video:
+        </h5>
+        <ul class="mb-4">
+          <li><a href="#grayscale">Grayscale Conversion (Average and Luma Y601)</a></li>
+          <li> Convolution mask application </li>
+          <li> ASCII conversion</li>
+        </ul>
+
+        <h5 class="mb-3">
+          These processes will be analysed with this metrics:
+        </h5>
+        <ul class="mb-5">
+          <li> Histogram analysis (Images only) </li>
+          <li> Computational eficiency analysis (Video only) </li>
+        </ul>
+        <hr>
+
+        <h5 class="mt-5" id="grayscale">Grayscale Conversion</h5>
+        <div class="mx-4">
+          <p>
+            For this process, we go through each image pixel applying two different strategies,
+            the average technique, which applies the average for the RGB values, and the 
+            LUMA Y601 technique, which gives different weights to Red, Green and Blue, creating
+            a grayscale that has a different sensitivity to brightness and luminance. 
+          </p>
+
+          <p class="font-weight-bold"> Average method (Images):</p>
+          <xmp class="code">
+            // Grayscale average for images
+            void averageGrayscale(PImage originalImg) {
+              int originalSize = originalImg.width * originalImg.height;
+              averageGrayscaleImg = createImage(originalImg.width, originalImg.height, RGB);
+            
+              for (int i = 0; i < originalSize; i++) {
+                float pixelAvg = 0;
+            
+                pixelAvg = 
+                  (red(originalImg.pixels[i]) + 
+                  green(originalImg.pixels[i]) + 
+                  blue(originalImg.pixels[i])) / 3;
+                averageGrayscaleImg.pixels[i] = color(pixelAvg);
+              }
+            }
+          </xmp>
+          <img class="container mb-4" src="./img/grayscaleAvg.png"/>
+
+          <p class="font-weight-bold"> Average method (Video):</p>
+          <xmp class="code">
+            // Grayscale average for video
+            void averageGrayscale(Movie originalVid) {
+              averageGrayscaleImg = createImage(originalVid.width, originalVid.height, RGB);
+            
+              for (int i = 0; i < originalVid.width; i++) {    
+                for (int j = 0; j < originalVid.height; j++) {      
+                  // Calculate the 1D location from a 2D grid
+                  int pixelLocation = i + j * originalVid.width;      
+                
+                  float r = red(originalVid.pixels[pixelLocation]);      
+                  float g = green(originalVid.pixels[pixelLocation]);      
+                  float b = blue(originalVid.pixels[pixelLocation]);         
+                
+                  float pixelAvg = (r + g + b) / 3;  
+                  averageGrayscaleImg.pixels[pixelLocation] = color(pixelAvg);    
+                }  
+              }  
+            }
+          </xmp>
+          <video class="container mb-4" controls>
+            <source src="./video/grayscaleAvg.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+          </video>   
+
+          <p class="font-weight-bold"> Luma Y'601 method (Images):</p>
+          <xmp class="code">
+            // Grayscale Luma y'601 for images
+            void lumaGrayscale(PImage originalImg) {
+              int originalSize = originalImg.width * originalImg.height;
+              lumaGrayscaleImg = createImage(originalImg.width, originalImg.height, RGB);
+            
+              for (int i = 0; i < originalSize; i++) {
+                float pixelLumaAvg = 0;
+            
+                pixelLumaAvg = 
+                  red(originalImg.pixels[i]) * 0.299 + 
+                  green(originalImg.pixels[i]) * 0.587 + 
+                  blue(originalImg.pixels[i]) * 0.114;
+                lumaGrayscaleImg.pixels[i] = color(pixelLumaAvg);
+              }
+            }
+              }
+            }
+          </xmp>
+          <img class="container mb-4" src="./img/grayscaleLuma.png"/>
+
+          <p class="font-weight-bold"> Luma Y'601 method (Video):</p>
+          <xmp class="code">
+            // Grayscale Luma y'601 for video
+            void lumaGrayscale(Movie originalVid) {
+              lumaGrayscaleImg = createImage(originalVid.width, originalVid.height, RGB);
+            
+              for (int i = 0; i < originalVid.width; i++) {    
+                for (int j = 0; j < originalVid.height; j++) {      
+                  // Calculate the 1D location from a 2D grid
+                  int pixelLocation = i + j * originalVid.width;      
+                
+                  float r = red(originalVid.pixels[pixelLocation]) * 0.299;      
+                  float g = green(originalVid.pixels[pixelLocation]) * 0.587;      
+                  float b = blue(originalVid.pixels[pixelLocation]) * 0.114;         
+            
+                  lumaGrayscaleImg.pixels[pixelLocation] = color(r + g + b);    
+                }  
+              }  
+            }
+          </xmp>
+          <video class="container mb-4" controls>
+            <source src="./video/grayscaleLuma.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+          </video>   
+        </div>
+
+      </div>
+    </div>
+  </div>
+  <hr>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 col-md-10 mx-auto">
+          <ul class="list-inline text-center">
+            <li class="list-inline-item">
+              <a href="https://github.com/visualComp2020">
+                <span class="fa-stack fa-lg">
+                  <i class="fas fa-circle fa-stack-2x"></i>
+                  <i class="fab fa-github fa-stack-1x fa-inverse"></i>
+                </span>
+              </a>
+            </li>
+          </ul>
+          <p class="copyright text-muted">
+            <a class="text-muted" href="https://www.freepik.com/free-photos-vectors/background" target="_blank">
+              Background vector created by starline - www.freepik.com
+            </a>
+          </p>
+          <p class="copyright text-muted">Copyright &copy; visualComp2020.github.io 2020</p>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Bootstrap core JavaScript -->
+  <script src="vendor/jquery/jquery.min.js"></script>
+  <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+  <!-- Custom scripts for this template -->
+  <script src="js/clean-blog.min.js"></script>
+
+</body>
+
+</html>

@@ -409,3 +409,27 @@ footer .copyright {
   font-size: 16px;
   padding: 25px 35px;
 }
+
+.team-item {
+  margin: 10% 0;
+  justify-content: center;
+}
+
+.avatar {
+  vertical-align: middle;
+  width: 155px;
+  height: 155px;
+  border-radius: 50%;
+  margin-right: 2%;
+}
+
+.teammate-info {
+  margin-top: 3%;
+}
+
+.code {
+  font-family: Consolas,"courier new";
+  background-color: #f1f1f1;
+  font-size: 16px;
+  margin: 3% 1.5%;  
+}
