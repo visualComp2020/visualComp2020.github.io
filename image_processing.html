@@ -72,7 +72,7 @@
         </h5>
         <ul class="mb-4">
           <li><a href="#grayscale">Grayscale Conversion (Average and Luma Y601)</a></li>
-          <li> Convolution mask application </li>
+          <li><a href="#convolution">Convolution mask application</a></li>
           <li> ASCII conversion</li>
         </ul>
 
@@ -187,8 +187,137 @@
             Your browser does not support the video tag.
           </video>   
         </div>
-
+        <hr>
       </div>
+
+      <div class="col-lg-12 col-md-12 mx-auto">
+        <h5 class="mt-5" id="convolution">Convolution mask application</h5>
+        <div class="mx-4">
+          <p>
+            For this process, we go through each image pixel adding 
+            each element of the image to its local neighbors, weighted by the kernel,
+            this will allow us to apply "filters" to images and videos, such as 
+            saturation, high edge detection, high definition, emboss and blur.
+
+            We'll use the following two functions:
+          </p>
+          <xmp class="code">
+            void imgConvolution(float[][] filter, PImage originalImg){
+              convolutedImg = createImage(originalImg.width, originalImg.height, RGB);
+              int matrixSize = 3;
+            
+              for (int x = 0; x < originalImg.width; x++) {
+                for (int y = 0; y < originalImg.height; y++ ) {
+                  color convolutedColor = convolutePixel(x, y, filter, matrixSize, originalImg);
+                  int pixelLocation = x + y * originalImg.width;
+                  
+                  convolutedImg.pixels[pixelLocation] = convolutedColor;
+                }
+              }
+            }
+            
+            color convolutePixel(int x, int y, float[][] filter, int matrixsize, PImage img)
+            {
+              float rtotal = 0.0;
+              float gtotal = 0.0;
+              float btotal = 0.0;
+              int offset = matrixsize / 2;
+              
+              for (int i = 0; i < matrixsize; i++){
+                for (int j= 0; j < matrixsize; j++){
+                  // What pixel are we testing
+                  int pixelX = x+i-offset;
+                  int pixelY = y+j-offset;
+                  int pixelLocation = pixelX + img.width*pixelY;
+                  // Make sure we haven't walked off our image, we could do better here
+                  pixelLocation = constrain(pixelLocation, 0, img.pixels.length-1);
+                  // Calculate the convolution
+                  rtotal += (red(img.pixels[pixelLocation]) * filter[i][j]);
+                  gtotal += (green(img.pixels[pixelLocation]) * filter[i][j]);
+                  btotal += (blue(img.pixels[pixelLocation]) * filter[i][j]);
+                }
+              }
+              // Make sure RGB is within range
+              rtotal = constrain(rtotal, 0, 255);
+              gtotal = constrain(gtotal, 0, 255);
+              btotal = constrain(btotal, 0, 255);
+              // Return the resulting color
+              return color(rtotal, gtotal, btotal);
+            }
+          </xmp>
+
+          <p class="font-weight-bold"> Saturation (Images):</p>
+          <xmp class="code">
+            float[][] saturation = {{ 0.33333, 0.33333, 0.33333 },
+                                    { 0.33333, 0.33333, 0.33333 },
+                                    { 0.33333, 0.33333, 0.33333 }}; 
+          </xmp>
+          <img class="container mb-4" src="./img/saturationConvolution.png"/>
+
+          <p class="font-weight-bold"> Saturation (Video):</p>
+          <video class="container mb-4" controls>
+            <source src="./video/saturated.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+          </video>   
+
+          <p class="font-weight-bold"> High edge detection (Images):</p>
+          <xmp class="code">
+            float[][] highEdgeDetection = { { -1, -1, -1 },
+                                            { -1, 8, -1 },
+                                            { -1, -1, -1 } };
+          </xmp>
+          <img class="container mb-4" src="./img/edgeConvolution.png"/>
+
+          <p class="font-weight-bold"> High edge detection (Video):</p>
+          <video class="container mb-4" controls>
+            <source src="./video/highEdgeDetection.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+          </video>   
+
+          <p class="font-weight-bold"> High definition (Images):</p>
+          <xmp class="code">
+            float[][] highDefinition = {{ 0, -1, 0 },
+                                        { -1, 5, -1},
+                                        { 0, -1, 0 }};
+          </xmp>
+          <img class="container mb-4" src="./img/highDefConvolution.png"/>
+
+          <p class="font-weight-bold"> High definition (Video):</p>
+          <video class="container mb-4" controls>
+            <source src="./video/highDefinition.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+          </video>  
+
+          <p class="font-weight-bold"> Emboss (Images):</p>
+          <xmp class="code">
+            float[][] emboss = {{ -2, -1, 0 },
+                                { -1, 1, 1 },
+                                { 0, 1, 2 }};
+          </xmp>
+          <img class="container mb-4" src="./img/embossConvolution.png"/>
+
+          <p class="font-weight-bold"> Emboss (Video):</p>
+          <video class="container mb-4" controls>
+            <source src="./video/emboss.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+          </video>  
+
+          <p class="font-weight-bold"> Box Blur (Images):</p>
+          <xmp class="code">
+            float[][] blur = {{ 0.11111, 0.11111, 0.11111 },
+                              { 0.11111, 0.11111, 0.11111 },
+                              { 0.11111, 0.11111, 0.11111 }};
+          </xmp>
+          <img class="container mb-4" src="./img/blurConvolution.png"/>
+
+          <p class="font-weight-bold"> Box Blur (Video):</p>
+          <video class="container mb-4" controls>
+            <source src="./video/blur.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+          </video>  
+        </div>
+      </div>
+
     </div>
   </div>
   <hr>
