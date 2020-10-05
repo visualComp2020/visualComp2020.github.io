@@ -284,6 +284,10 @@
           <img class="container mb-4" src="./img/edgeConvolution.png"/>
 
           <p class="font-weight-bold" id="highEdgeDet"> Edge detection with shaders (Images):</p>
+          <p>
+            We use a predefined GLSL shader to compare with our previous edge detector who use simple convolution images.
+
+          </p>
           <xmp class="code">
             void main(void) {
               
@@ -312,7 +316,8 @@
             }
           </xmp>
           <img class="container mb-4" src="./img/edgeShader.PNG"/>
-
+          <p>
+            The results are very similar. You can see an image perhaps clearer and with more details in specific objects like the clouds and the rock when using shaders.</p>
 
           <p class="font-weight-bold"> High edge detection (Video):</p>
           <video class="container mb-4" controls>
