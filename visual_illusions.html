@@ -97,39 +97,6 @@
         <hr>
       </div>
 
-      <div class="col-lg-12 col-md-12 mx-auto">
-        <h5 class="mt-5" id="ascii">Ascii conversion</h5>
-        <div class="mx-4">
-          <p>
-            In this conversion process, we created a 10 size array with the
-            ascii character we want to use to represent brightness,
-            we'll go through each pixel of the image/video, get and apply the
-            pixel color to the character and then pick the char we want with a
-            brightness division to get a value between 0-10
-            ({'█', '█', '▓', '▒', '░', '#', '≡', '%', '$', '@', '&'})
-          </p>
-          <xmp class="code">
-            void convertAscii(PImage img, int resolution) {
-            background(170);
-            textFont(font,resolution);
-            for(int i = 0; i < img.height; i+=resolution){ for(int j=0; j < img.width; j+=resolution){ // For images
-              color textColor=img.get(int(j),int(i)); // For video color textColor=vid.pixels[i + j*vid.width];
-              fill(textColor); textAlign(CENTER); float value=brightness(textColor); char
-              charac=asciiChars[int(value/25.5)]; text(charac,(j),(i)); } } } </xmp>
-
-              <p class="font-weight-bold"> Ascii conversion (Images):</p>
-              <img class="container mb-4" src="./img/asciiImg.png" />
-
-              <p class="font-weight-bold"> Ascii conversion (Video):</p>
-              <video class="container mb-4" controls>
-                <source src="./video/ascii.mp4" type="video/mp4">
-                Your browser does not support the video tag.
-              </video>
-
-        </div>
-      </div>
-      <hr>
-
       <!-- Footer -->
       <footer>
         <div class="container">
@@ -165,7 +132,7 @@
 
       <script>
         $(function () {
-          $("#hermannIllusion").load("https://github.com/visualComp2020/visual_illusions/tree/master/hermann/index.html");
+          $("#hermannIllusion").load("./hermann.html");
         });
       </script>
 
