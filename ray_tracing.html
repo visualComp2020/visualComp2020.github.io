@@ -89,14 +89,60 @@
     </div>
 
     <h5 class="mt-5" id="concepts">Conceptos clave</h5>
-    <div class="mx-4">
-      <p>
-        For this process
-      </p>
-    </div>
-    <xmp class="code">
-    </xmp>
-    <a href="http://visual-illusions.herokuapp.com/hermann/"><b>You can see the demo here</b></a>
+    <ul class="mb-4">
+      <li>
+        <p class="font-weight-bold">Cómo se crea una imágen 3D:</p>
+        <div class="d-inline-flex">
+          <img class="col-4" src="img/ray_trace_1.png">
+          <p class="col-8">
+            Inicialmente necesitamos entender cómo podemos representar una escena tridimensional con una imágen bidimensional,
+            aunque suena extraño, lo primero que necesitamos es una imagen con una superficie bidimensional con un área
+            determinada.
+            Esta superficie bidimensional, tambien llamada plano de la imagen, es un concepto de computación gráfica utilizado
+            para proyectar una
+            escena tridimensional (equivalente al rollo de una película o al canvas que utilizan los pintores).
+          </p>
+        </div>
+      </li>
+
+      <li>
+        <p class="font-weight-bold">Generando perspectiva:</p>
+        <div class="d-inline-flex">
+          <p class="col-8">
+            La mejor manera the proyectar una figura tridimensional es dibujando lineas desde cada punto/esquina 
+            del objeto tridimensional al ojo del espectador. Para mapear la forma del objeto en el canvas, se marca
+            un punto donde cada linea se intersecte con la superficie del plano. 
+            Esta operación debe repetirse para todos los bordes del objeto, teniendo como resultado, una representación
+            en 2D del objeto sobre el canvas. Generando nuestra primera imágen de proyección de perspectiva. Si
+            se hace este procedimiento para todos los objetos en una escena, se generará una imágen de la escena 
+            proyectada sobre un punto específico.
+          </p>
+          <img class="col-4" src="img/ray_trace_2.png">
+        </div>
+      </li>
+
+      <li>
+        <p class="font-weight-bold">Luz, sombra y color:</p>
+        <div>
+          <p>
+            El color, brillo y somras en un objeto se da por la initeracción de la luz con el material del mismo.
+            La luz está hecha de fotónes que tienen un componente eléctrico y uno magnético. Los fotónes son emitidos por
+            una variedad de fuentes de luz, el más conocido por todos es el sol. Si un grupo de fotónes llega a un objeto, 
+            pueden suceder tres cosas: El objeto los absorbe, los refleja o los transmite.
+            El porcentaje de fotónes reflejados, absorbidos y transmitidos varía dependiendo del material del objeto,
+            sin embargo, se tiene como regla general que el total de fotónes que llegan a un objeto debe ser igual al
+            número de fotones reflejados, más los fotónes transmitidos, más los absorbidos.
+          </p>
+          <img class="col-8" src="img/colors.png">
+          <p>
+            Para finalizar, la absorción es responsable de los colores percibidos en un objeto, la luz blanca está compuesta
+            por fotónes "rojo", "verde" y "azul". Si un objeto rojo es alcanzado por luz blanca, el proceso de absorción filtra
+            los fotónes "verde" y "azul", y los fotones rojos son reflejados, por esta razón el objeto parece ser rojo y es
+            perceptible por el ojo humano cuando el rayo reflejado alcanza al ojo de manera perpendicular.
+          </p>
+        </div>
+      </li>
+    </ul>
     <hr>
 
     <h5 class="mt-5" id="implementations">Implementación</h5>
