@@ -81,6 +81,7 @@
           </li>
           <li>
             <a href="#implementations">Implementación</a>
+
           </li>
           <li><a href="#results">Resultados</a></li>
         </ul>   
@@ -102,19 +103,120 @@
     <h5 class="mt-5" id="implementations">Implementación</h5>
     <div class="mx-4">
       <p>
-        For this process
+         
+         El algoritmo de trazado de rayos toma una imagen compuesta de píxeles. Por cada píxel de la imagen, dispara un rayo primario a la escena. La dirección de ese rayo primario se obtiene trazando una línea desde el ojo hasta el centro de ese píxel. Una vez que tenemos establecida la dirección de ese rayo primario, verificamos cada objeto de la escena para ver si se cruza con alguno de ellos. En algunos casos, el rayo primario se cruzará con más de un objeto. Cuando eso sucede, seleccionamos el objeto cuyo punto de intersección es el más cercano al ojo. Luego disparamos un rayo de sombra desde el punto de intersección hasta la luz. Si este rayo en particular no se cruza con un objeto en su camino hacia la luz, el punto de impacto se ilumina. Si se cruza con otro objeto, ese objeto proyecta una sombra sobre él.
       </p>
+      <img class="container mb-4" src="./img/pixelrender.gif" />
     </div>
     <xmp class="code">
+      for (int j = 0; j < imageHeight; ++j) { 
+        for (int i = 0; i < imageWidth; ++i) { 
+            // compute primary ray direction
+            Ray primRay; 
+            computePrimRay(i, j, &primRay); 
+            // shoot prim ray in the scene and search for intersection
+            Point pHit; 
+            Normal nHit; 
+            float minDist = INFINITY; 
+            Object object = NULL; 
+            for (int k = 0; k < objects.size(); ++k) { 
+                if (Intersect(objects[k], primRay, &pHit, &nHit)) { 
+                    float distance = Distance(eyePosition, pHit); 
+                    if (distance < minDistance) { 
+                        object = objects[k]; 
+                        minDistance = distance; // update min distance 
+                    } 
+                } 
+            } 
+            if (object != NULL) { 
+                // compute illumination
+                Ray shadowRay; 
+                shadowRay.direction = lightPosition - pHit; 
+                bool isShadow = false; 
+                for (int k = 0; k < objects.size(); ++k) { 
+                    if (Intersect(objects[k], shadowRay)) { 
+                        isInShadow = true; 
+                        break; 
+                    } 
+                } 
+            } 
+            if (!isInShadow) 
+                pixels[i][j] = object->color * light.brightness; 
+            else 
+                pixels[i][j] = 0; 
+        } 
+    } 
+    </xmp>
+    <p >
+Algoritmos de transporte de luz y ray tracing
+    </p>
+    <xmp class="code">
+      Vec3f castRay(const Vec3f &orig, const Vec3f &dir, ..., uint32_t depth) 
+{ 
+    if (depth > options.maxDepth) 
+        return options.backgroundColor; 
+ 
+    float tNear = INFINITY; // distance to the intersected object 
+    Object *hitObject = NULL; // pointer to the intersected object 
+    Vec3f hitColor = 0; // the color of the intersected point 
+    if (trace(orig, dir, objects, tnear, hitObject....) { 
+        switch (hitObject->materialType) { 
+            case REFLECTION_AND_REFRACTION: 
+                // compute reflection and refraction ray
+                ... 
+                // cast reflection and refraction ray, don't forget to increment depth
+                Vec3f reflectionColor = castRay(hitPoint, reflectionDirection, ..., depth + 1); 
+                Vec3f refractionColor = castRay(hitPoint, refractionDirection, ..., depth + 1); 
+                float kr; // how much light is reflected, computed by Fresnel equation 
+                fresnel(dir, N, hitObject->ior, kr); 
+                hitColor = reflectionColor * kr + refractionColor * (1 - kr); 
+                break; 
+            case REFLECTION: 
+                // compute reflection ray
+                ... 
+                // cast reflection ray, increment depth
+                Vec3f reflectionColor = castRay(hitPoint, reflectionDirection, ..., depth + 1); 
+                hitColor = reflectionColor; 
+                break; 
+            default: 
+                // compute phong illumination model
+                for (uint32_t i = 0; i < lights.size(); ++i) { 
+                    // compute shadow ray
+                    Vec3f lightDirection = lights[i].position - hitPoint; 
+                    float len2 = dot(lightDirection, lightDirection); // length^2 
+                    float tNearShadow = INFINITY; 
+                    // is hitPoint in shadow of this light and is the intersection point closes than the light itself?
+                    bool isInShadow = (trace(hitPoint, normalize(lightDirection), tNearShadow, ...) && tNearShadow * tNearShadow < len2); 
+                    // compute the Phong model terms
+                    hitColor = (1 - isInShadow) * (...); 
+                } 
+                break; 
+        } 
+    } 
+ 
+    return hitColor; 
+} 
     </xmp>
     <a href="http://visual-illusions.herokuapp.com/hermann/"><b>You can see the demo here</b></a>
+
     <hr>
 
     <h5 class="mt-5" id="results">Resultados</h5>
     <div class="mx-4">
       <p>
-        For this process
+        Generación de imagen usando ray tracing.
       </p>
+
+      <img class="container mb-4" src="./img/canicas.jpg" />
+      <hr style="margin: 5% 0" />
+      <p>
+        Generación de imagen usando whitted ray tracing.
+      </p>
+
+      <img class="container mb-4" src="./img/whitAlgo.png" />
+      <hr style="margin: 5% 0" />
+
+
     </div>
     <xmp class="code">
     </xmp>
