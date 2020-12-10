@@ -104,7 +104,7 @@
     <div class="mx-4">
       <p>
          
-         El algoritmo de trazado de rayos toma una imagen compuesta de píxeles. Por cada píxel de la imagen, dispara un rayo primario a la escena. La dirección de ese rayo primario se obtiene trazando una línea desde el ojo hasta el centro de ese píxel. Una vez que tenemos establecida la dirección de ese rayo primario, verificamos cada objeto de la escena para ver si se cruza con alguno de ellos. En algunos casos, el rayo primario se cruzará con más de un objeto. Cuando eso sucede, seleccionamos el objeto cuyo punto de intersección es el más cercano al ojo. Luego disparamos un rayo de sombra desde el punto de intersección hasta la luz. Si este rayo en particular no se cruza con un objeto en su camino hacia la luz, el punto de impacto se ilumina. Si se cruza con otro objeto, ese objeto proyecta una sombra sobre él.
+         El algoritmo de ray tracing toma una imagen compuesta de píxeles. Por cada píxel de la imagen, dispara un rayo primario a la escena. La dirección de ese rayo primario se obtiene trazando una línea desde el ojo hasta el centro de ese píxel. Una vez que tenemos establecida la dirección de ese rayo primario, verificamos cada objeto de la escena para ver si se cruza con alguno de ellos. En algunos casos, el rayo primario se cruzará con más de un objeto. Cuando eso sucede, seleccionamos el objeto cuyo punto de intersección es el más cercano al ojo. Luego disparamos un rayo de sombra desde el punto de intersección hasta la luz. Si este rayo en particular no se cruza con un objeto en su camino hacia la luz, el punto de impacto se ilumina. Si se cruza con otro objeto, ese objeto proyecta una sombra sobre él.
       </p>
       <img class="container mb-4" src="./img/pixelrender.gif" />
     </div>
@@ -147,8 +147,11 @@
         } 
     } 
     </xmp>
+    <hr style="margin: 5% 0" />
     <p >
-Algoritmos de transporte de luz y ray tracing
+Algoritmos de transporte de luz y ray tracing:
+Whitted propuso usar estas leyes para calcular la dirección de reflexión y refracción de los rayos a medida que se cruzan con superficies reflectantes o transparentes, y seguir la trayectoria de estos rayos para averiguar el color del objeto con el que se cruzarían. Pueden ocurrir tres casos en el punto de intersección de estos rayos de reflexión y refracción.
+A continuacion se muestra la funcion castRay que implementa el algoritmo de transporte de luz de whitted.
     </p>
     <xmp class="code">
       Vec3f castRay(const Vec3f &orig, const Vec3f &dir, ..., uint32_t depth) 
